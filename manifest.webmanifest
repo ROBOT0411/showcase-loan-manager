@@ -1,0 +1,14 @@
+{
+  "id": "./",
+  "name": "展示品借貨管理系統",
+  "short_name": "展示品借貨",
+  "description": "展示品借用、歸還與歷史管理",
+  "lang": "zh-Hant",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5f7fb",
+  "theme_color": "#f5f7fb",
+  "icons": [{"src":"icons/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

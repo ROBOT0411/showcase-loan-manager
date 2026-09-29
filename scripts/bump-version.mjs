@@ -1,0 +1,17 @@
+import { readFile, writeFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const appPath = resolve(root, 'app.js');
+const workerPath = resolve(root, 'service-worker.js');
+const app = await readFile(appPath, 'utf8');
+const match = app.match(/const VERSION = '(\d+)\.(\d+)\.(\d+)';/);
+if (!match) throw new Error('Could not find app version in app.js');
+const next = `${match[1]}.${match[2]}.${Number(match[3]) + 1}`;
+const updatedApp = app.replace(match[0], `const VERSION = '${next}';`);
+const worker = await readFile(workerPath, 'utf8');
+const updatedWorker = worker.replace(/const CACHE_VERSION = 'showcase-loan-v[^']+';/, `const CACHE_VERSION = 'showcase-loan-v${next}';`);
+if (updatedWorker === worker) throw new Error('Could not find service worker cache version');
+await writeFile(appPath, updatedApp);
+await writeFile(workerPath, updatedWorker);
+console.log(`Version updated to ${next}`);

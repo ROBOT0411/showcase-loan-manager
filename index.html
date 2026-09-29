@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f7fb">
+  <meta name="description" content="展示品借貨、歸還與歷史管理">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <title>展示品借貨管理</title>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-icon">▦</span><div><h1>展示品借貨</h1><p>借用管理系統 <span id="version"></span></p></div></div>
+    <button class="icon-button" id="settings-open" aria-label="同步設定" title="同步設定">⚙</button>
+  </header>
+  <main class="page">
+    <section class="summary" aria-label="借用摘要">
+      <div><span>未歸還</span><strong id="active-count">0</strong></div>
+      <div><span>已封存</span><strong id="archived-count">0</strong></div>
+      <div class="sync-state"><span>同步狀態</span><strong id="sync-status">本機保存</strong></div>
+    </section>
+    <section class="toolbar">
+      <label>業務員<select id="sales-filter"><option value="">所有業務</option></select></label>
+      <div class="segmented" role="group" aria-label="紀錄篩選">
+        <button data-status="active" class="selected">未歸還</button><button data-status="archived">已封存</button><button data-status="all">全部</button>
+      </div>
+      <div class="toolbar-actions"><button id="export" class="button secondary">匯出 Excel</button><button id="add" class="button primary">＋ 新增借用單</button></div>
+    </section>
+    <section id="record-list" class="record-list" aria-live="polite"></section>
+    <p id="empty-state" class="empty hidden">目前沒有符合條件的借用紀錄</p>
+  </main>
+  <nav class="bottom-nav"><button id="nav-main" class="active">▤<span>借用紀錄</span></button><button id="nav-history">◷<span>歷史紀錄</span></button><button id="nav-export">⇩<span>匯出報表</span></button></nav>
+  <dialog id="transaction-dialog"><form id="transaction-form" method="dialog">
+    <div class="dialog-heading"><div><small id="form-kicker">新增資料</small><h2 id="form-title">新增借用單</h2></div><button type="button" class="icon-button" data-close aria-label="關閉">×</button></div>
+    <input type="hidden" id="tx-id">
+    <div class="form-grid"><label>借出日期<input id="borrow-date" type="date" required></label><label>歸還日期<input id="return-date" type="date"></label><label class="wide">客戶名稱<input id="customer" maxlength="100" placeholder="輸入客戶名稱"></label></div>
+    <fieldset><legend>業務員（可複選）</legend><div id="sales-options" class="check-grid"></div></fieldset>
+    <fieldset><legend>借用產品</legend><div id="product-options" class="product-options"></div></fieldset>
+    <div class="dialog-actions"><button type="button" class="button secondary" data-close>取消</button><button class="button primary" value="save">儲存借用單</button></div>
+  </form></dialog>
+  <dialog id="return-dialog"><form id="return-form" method="dialog">
+    <div class="dialog-heading"><div><small>歸還確認</small><h2>選擇本次歸還</h2></div><button type="button" class="icon-button" data-close aria-label="關閉">×</button></div>
+    <input type="hidden" id="return-tx-id"><label>歸還業務員<select id="return-sales"></select></label>
+    <fieldset><legend>勾選本次歸還產品</legend><div id="return-products" class="product-options"></div></fieldset>
+    <div class="dialog-actions"><button type="button" class="button secondary" data-close>取消</button><button class="button primary" value="return">確認歸還</button></div>
+  </form></dialog>
+  <dialog id="history-dialog"><div class="dialog-heading"><div><small>借用與歸還</small><h2>歷史紀錄</h2></div><button class="icon-button" data-close aria-label="關閉">×</button></div><div id="history-list" class="history-list"></div></dialog>
+  <dialog id="settings-dialog"><form id="settings-form" method="dialog"><div class="dialog-heading"><div><small>雲端／離線</small><h2>同步設定</h2></div><button type="button" class="icon-button" data-close aria-label="關閉">×</button></div>
+    <p class="help">未設定 Firebase 時，資料會保存在此裝置的瀏覽器。跨裝置雲端同步需填入自己的 Firebase Web 設定，並啟用匿名登入與 Firestore。</p>
+    <label>Firebase 設定（JSON）<textarea id="firebase-config" rows="7" placeholder='{"apiKey":"…","authDomain":"…","projectId":"…","appId":"…"}'></textarea></label>
+    <div class="dialog-actions"><button type="button" id="disconnect" class="button danger-text">清除雲端設定</button><button class="button primary" value="connect">儲存並連線</button></div>
+  </form></dialog>
+  <div id="toast" role="status" class="toast hidden"></div>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js" defer></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

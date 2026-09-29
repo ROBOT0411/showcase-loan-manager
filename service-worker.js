@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'showcase-loan-v1.0.1';
+const CACHE_VERSION = 'showcase-loan-v1.0.2';
 const APP_SHELL = ['./', './index.html', './styles.css', './app.js', './manifest.webmanifest', './icons/icon.svg'];
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE_VERSION).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting())));
 self.addEventListener('activate', event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('showcase-loan-') && key !== CACHE_VERSION).map(key => caches.delete(key)))).then(() => self.clients.claim())));

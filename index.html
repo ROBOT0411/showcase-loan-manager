@@ -12,26 +12,30 @@
 </head>
 <body>
   <header class="topbar">
-    <div class="brand"><span class="brand-icon">▦</span><div><h1>展示品借貨</h1><p>借用管理系統 <span id="version"></span></p></div></div>
+    <div class="brand"><span class="brand-icon">▦</span><div><h1>展示品借貨表</h1><p>借用管理系統 <span id="version"></span></p></div></div>
     <button class="icon-button" id="settings-open" aria-label="同步設定" title="同步設定">⚙</button>
   </header>
   <main class="page">
-    <section class="summary" aria-label="借用摘要">
-      <div><span>未歸還</span><strong id="active-count">0</strong></div>
-      <div><span>已封存</span><strong id="archived-count">0</strong></div>
-      <div class="sync-state"><span>同步狀態</span><strong id="sync-status">本機保存</strong></div>
-    </section>
     <section class="toolbar">
-      <label>業務員<select id="sales-filter"><option value="">所有業務</option></select></label>
-      <div class="segmented" role="group" aria-label="紀錄篩選">
-        <button data-status="active" class="selected">未歸還</button><button data-status="archived">已封存</button><button data-status="all">全部</button>
-      </div>
+      <div class="filter-title">⚑ 對帳篩選</div>
+      <label class="toolbar-select-label">業務員<select id="sales-filter"><option value="">所有業務</option></select></label>
+      <label class="toolbar-select-label">紀錄<select id="status-filter"><option value="active">🚨 僅看未歸還（主表）</option><option value="archived">📁 已封存紀錄</option><option value="all">📋 顯示全部</option></select></label>
       <div class="toolbar-actions"><button id="export" class="button secondary">匯出 Excel</button><button id="add" class="button primary">＋ 新增借用單</button></div>
     </section>
-    <section id="record-list" class="record-list" aria-live="polite"></section>
+    <div class="table-statusline"><span>未歸還 <b id="active-count">0</b>　·　已封存 <b id="archived-count">0</b></span><span>同步：<b id="sync-status">本機保存</b></span></div>
+    <section class="table-shell" aria-label="展示品借貨表">
+      <div class="table-scroll">
+        <table class="loan-table">
+          <thead>
+            <tr><th class="date-heading" rowspan="2">日期<br>（借出／歸還）</th><th class="group-heading" colspan="7">業務員</th><th class="customer-heading" rowspan="2">客戶名稱</th><th class="product-group" colspan="15">產品型號（序號）</th><th class="actions-heading" rowspan="2">操作<br>結案</th></tr>
+            <tr id="table-subhead"></tr>
+          </thead>
+          <tbody id="record-list" aria-live="polite"></tbody>
+        </table>
+      </div>
+    </section>
     <p id="empty-state" class="empty hidden">目前沒有符合條件的借用紀錄</p>
   </main>
-  <nav class="bottom-nav"><button id="nav-main" class="active">▤<span>借用紀錄</span></button><button id="nav-history">◷<span>歷史紀錄</span></button><button id="nav-export">⇩<span>匯出報表</span></button></nav>
   <dialog id="transaction-dialog"><form id="transaction-form" method="dialog">
     <div class="dialog-heading"><div><small id="form-kicker">新增資料</small><h2 id="form-title">新增借用單</h2></div><button type="button" class="icon-button" data-close aria-label="關閉">×</button></div>
     <input type="hidden" id="tx-id">

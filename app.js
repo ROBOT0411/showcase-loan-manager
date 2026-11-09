@@ -1,4 +1,4 @@
-const VERSION = '1.0.5';
+const VERSION = '1.0.6';
 const STORAGE_KEY = 'showcase-loan-manager-v1';
 const CONFIG_KEY = 'showcase-loan-firebase-config-v1';
 const SALESPEOPLE = ['Z', 'G', 'A', 'AL', 'AX', 'C', 'H'];
@@ -26,7 +26,7 @@ function render(){
   $('active-count').textContent=state.transactions.filter(t=>!t.isDeleted).length;
   $('archived-count').textContent=state.transactions.filter(t=>t.isDeleted).length;
   $('status-filter').value=statusFilter;
-  $('table-subhead').innerHTML=state.salespersons.map(s=>`<th class="sales-heading">${esc(s)}</th>`).join('')+`<th class="customer-subhead"></th>`+state.products.map(p=>`<th class="product-heading"><span>${esc(p)}</span></th>`).join('')+`<th class="actions-subhead"></th>`;
+  $('table-subhead').innerHTML=state.salespersons.map(s=>`<th class="sales-heading">${esc(s)}</th>`).join('')+state.products.map(p=>`<th class="product-heading"><span>${esc(p)}</span></th>`).join('');
   const rows=state.transactions.filter(t=>(statusFilter==='all'||(statusFilter==='active'?!t.isDeleted:t.isDeleted))&&(!selectedSales||salesOf(t).includes(selectedSales))).sort((a,b)=>String(b.borrowDate||'').localeCompare(String(a.borrowDate||'')));
   $('record-list').innerHTML=rows.map(tableRow).join('');$('empty-state').classList.toggle('hidden',rows.length>0);
 }
